@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "local-run": "rm -rf dist && yarn && yarn build && yarn start"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.1.6",
