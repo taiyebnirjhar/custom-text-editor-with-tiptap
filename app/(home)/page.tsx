@@ -27,7 +27,7 @@ console.log("Hello, World!");</code></pre>
   </div>
 
   <figure>
-    <img src="/placeholder.svg?height=400&width=600" alt="Sample image" />
+    <img src="https://dummyimage.com/600x400/000/fff" alt="Sample image" />
     <figcaption>A sample image with caption</figcaption>
   </figure>
 
