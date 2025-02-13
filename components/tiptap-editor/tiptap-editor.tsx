@@ -1,33 +1,22 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { Color } from "@tiptap/extension-color";
-import FontFamily from "@tiptap/extension-font-family";
-import FontSize from "@tiptap/extension-font-size";
-import Heading from "@tiptap/extension-heading";
-import TextHighlight from "@tiptap/extension-highlight";
-import Image from "@tiptap/extension-image";
-import Link from "@tiptap/extension-link";
-import TextAlign from "@tiptap/extension-text-align";
-import TextStyle from "@tiptap/extension-text-style";
-import Underline from "@tiptap/extension-underline";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { cn } from "@/lib/utils"
+import { Color } from "@tiptap/extension-color"
+import FontFamily from "@tiptap/extension-font-family"
+import FontSize from "@tiptap/extension-font-size"
+import Heading from "@tiptap/extension-heading"
+import TextHighlight from "@tiptap/extension-highlight"
+import Image from "@tiptap/extension-image"
+import Link from "@tiptap/extension-link"
+import TextAlign from "@tiptap/extension-text-align"
+import TextStyle from "@tiptap/extension-text-style"
+import Underline from "@tiptap/extension-underline"
+import { EditorContent, useEditor } from "@tiptap/react"
+import StarterKit from "@tiptap/starter-kit"
 import {
   AlignCenter,
   AlignJustify,
@@ -52,30 +41,32 @@ import {
   Strikethrough,
   UnderlineIcon,
   X,
-} from "lucide-react";
-import { useCallback, useState } from "react";
+} from "lucide-react"
+import { useCallback, useState } from "react"
 
 const fontFamilies = [
+  { value: "default", label: "System Default" },
   { value: "Arial", label: "Arial" },
   { value: "Times New Roman", label: "Times New Roman" },
   { value: "Courier New", label: "Courier New" },
   { value: "Georgia", label: "Georgia" },
   { value: "Verdana", label: "Verdana" },
-];
+]
 
 const fontSizes = [
-  { value: "12px", label: "12" },
-  { value: "14px", label: "14" },
-  { value: "16px", label: "16" },
-  { value: "18px", label: "18" },
-  { value: "20px", label: "20" },
-  { value: "24px", label: "24" },
-  { value: "30px", label: "30" },
-  { value: "36px", label: "36" },
-  { value: "48px", label: "48" },
-  { value: "60px", label: "60" },
-  { value: "72px", label: "72" },
-];
+  { value: "default", label: "16px (Default)" },
+  { value: "12px", label: "12px" },
+  { value: "14px", label: "14px" },
+  { value: "16px", label: "16px" },
+  { value: "18px", label: "18px" },
+  { value: "20px", label: "20px" },
+  { value: "24px", label: "24px" },
+  { value: "30px", label: "30px" },
+  { value: "36px", label: "36px" },
+  { value: "48px", label: "48px" },
+  { value: "60px", label: "60px" },
+  { value: "72px", label: "72px" },
+]
 
 const headingLevels = [
   { value: "paragraph", label: "Normal text" },
@@ -85,7 +76,7 @@ const headingLevels = [
   { value: "4", label: "Heading 4" },
   { value: "5", label: "Heading 5" },
   { value: "6", label: "Heading 6" },
-];
+]
 
 const colors = [
   "#000000",
@@ -128,22 +119,17 @@ const colors = [
   "#9fc5e8",
   "#b4a7d6",
   "#d5a6bd",
-];
+]
 
 interface TipTapEditorProps {
-  onUpdate?: (html: string) => void;
-  content?: string;
-  editable?: boolean;
+  onUpdate?: (html: string) => void
+  content?: string
+  editable?: boolean
 }
 
-export function TipTapEditor({
-  onUpdate,
-  content = "",
-  editable = true,
-}: TipTapEditorProps) {
-  const [activeTab, setActiveTab] = useState("write");
-  const [showHtml, setShowHtml] = useState(false);
-  const [zoom, setZoom] = useState(100);
+export function TipTapEditor({ onUpdate, content = "", editable = true }: TipTapEditorProps) {
+  const [viewMode, setViewMode] = useState<"write" | "preview" | "html">("write")
+  const [zoom, setZoom] = useState(100)
 
   const editor = useEditor({
     extensions: [
@@ -185,34 +171,29 @@ export function TipTapEditor({
     content,
     editable,
     onUpdate: ({ editor }) => {
-      onUpdate?.(editor.getHTML());
+      onUpdate?.(editor.getHTML())
     },
-  });
+  })
 
   const setLink = useCallback(() => {
-    const previousUrl = editor?.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
+    const previousUrl = editor?.getAttributes("link").href
+    const url = window.prompt("URL", previousUrl)
 
-    if (url === null) return;
+    if (url === null) return
     if (url === "") {
-      editor?.chain().focus().extendMarkRange("link").unsetLink().run();
-      return;
+      editor?.chain().focus().extendMarkRange("link").unsetLink().run()
+      return
     }
 
-    editor
-      ?.chain()
-      .focus()
-      .extendMarkRange("link")
-      .setLink({ href: url })
-      .run();
-  }, [editor]);
+    editor?.chain().focus().extendMarkRange("link").setLink({ href: url }).run()
+  }, [editor])
 
   const addImage = useCallback(() => {
-    const url = window.prompt("URL");
-    if (url) editor?.chain().focus().setImage({ src: url }).run();
-  }, [editor]);
+    const url = window.prompt("URL")
+    if (url) editor?.chain().focus().setImage({ src: url }).run()
+  }, [editor])
 
-  if (!editor) return null;
+  if (!editor) return null
 
   return (
     <TooltipProvider>
@@ -220,8 +201,8 @@ export function TipTapEditor({
         <div className="flex items-center justify-between border-b ">
           <Tabs
             defaultValue="write"
-            value={activeTab}
-            onValueChange={setActiveTab}
+            value={viewMode}
+            onValueChange={(value) => setViewMode(value as "write" | "preview" | "html")}
             className="w-full"
           >
             <div className="flex items-center justify-between bg-muted px-3">
@@ -236,7 +217,7 @@ export function TipTapEditor({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setShowHtml(!showHtml)}
+                onClick={() => setViewMode(viewMode === "html" ? "write" : "html")}
                 className="text-sm font-medium hover:bg-muted px-4"
               >
                 HTML
@@ -245,87 +226,93 @@ export function TipTapEditor({
           </Tabs>
         </div>
 
-        {activeTab === "write" && !showHtml && (
-          <div className="flex flex-wrap items-start gap-2 border-b p-4 overflow-x-auto">
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="flex items-center gap-1">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0 hover:bg-muted"
-                      onClick={() => editor.chain().focus().undo().run()}
-                      disabled={!editor.can().undo()}
-                    >
-                      <RotateCcw className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Undo</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0 hover:bg-muted"
-                      onClick={() => editor.chain().focus().redo().run()}
-                      disabled={!editor.can().redo()}
-                    >
-                      <RotateCw className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Redo</TooltipContent>
-                </Tooltip>
+        {viewMode === "write" && (
+          <div className="flex flex-wrap items-start gap-x-1 gap-y-2 border-b p-2 overflow-x-auto">
+            <div className="flex flex-wrap items-center gap-x-1 gap-y-2 flex-1">
+              {/* Undo/Redo Group */}
+              <div className="flex items-center border-r pr-1">
+                <div className="flex items-center gap-0.5">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 hover:bg-muted"
+                        onClick={() => editor.chain().focus().undo().run()}
+                        disabled={!editor.can().undo()}
+                      >
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Undo</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 hover:bg-muted"
+                        onClick={() => editor.chain().focus().redo().run()}
+                        disabled={!editor.can().redo()}
+                      >
+                        <RotateCw className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Redo</TooltipContent>
+                  </Tooltip>
+                </div>
               </div>
 
-              <div className="flex items-center gap-1">
+              {/* Clear Formatting Button */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 hover:bg-muted"
+                    onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Clear formatting</TooltipContent>
+              </Tooltip>
+
+              {/* Text Structure Group */}
+              <div className="flex items-center border-r pr-1">
                 <Select
-                  value={
-                    editor.isActive("heading")
-                      ? editor.getAttributes("heading").level?.toString()
-                      : "paragraph"
-                  }
+                  value={editor.isActive("heading") ? editor.getAttributes("heading").level?.toString() : "paragraph"}
                   onValueChange={(value) => {
                     if (value === "paragraph") {
-                      editor.chain().focus().setParagraph().run();
+                      editor.chain().focus().setParagraph().run()
                     } else {
                       editor
                         .chain()
                         .focus()
                         .toggleHeading({
-                          level: Number.parseInt(value) as
-                            | 1
-                            | 2
-                            | 3
-                            | 4
-                            | 5
-                            | 6,
+                          level: Number.parseInt(value) as 1 | 2 | 3 | 4 | 5 | 6,
                         })
-                        .run();
+                        .run()
                     }
                   }}
                 >
-                  <SelectTrigger className="h-8 w-[140px] text-sm">
+                  <SelectTrigger className="h-8 w-[130px] text-sm">
                     <SelectValue placeholder="Normal text" />
                   </SelectTrigger>
                   <SelectContent>
                     {headingLevels.map((heading) => (
-                      <SelectItem
-                        key={heading.value}
-                        value={heading.value}
-                        className="text-sm"
-                      >
+                      <SelectItem key={heading.value} value={heading.value} className="text-sm">
                         {heading.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
 
+              {/* Font Settings Group */}
+              <div className="flex items-center gap-1 border-r pr-1">
                 <Select
-                  value={
-                    editor.getAttributes("textStyle").fontFamily || "default"
-                  }
+                  value={editor.getAttributes("textStyle").fontFamily || "default"}
                   onValueChange={(value) =>
                     editor
                       .chain()
@@ -334,19 +321,12 @@ export function TipTapEditor({
                       .run()
                   }
                 >
-                  <SelectTrigger className="h-8 w-[120px] text-sm">
+                  <SelectTrigger className="h-8 w-[160px] text-sm">
                     <SelectValue placeholder="Font..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="default" className="text-sm">
-                      Default
-                    </SelectItem>
                     {fontFamilies.map((font) => (
-                      <SelectItem
-                        key={font.value}
-                        value={font.value}
-                        className="text-sm"
-                      >
+                      <SelectItem key={font.value} value={font.value} className="text-sm">
                         {font.label}
                       </SelectItem>
                     ))}
@@ -354,9 +334,7 @@ export function TipTapEditor({
                 </Select>
 
                 <Select
-                  value={
-                    editor.getAttributes("textStyle").fontSize || "default"
-                  }
+                  value={editor.getAttributes("textStyle").fontSize || "default"}
                   onValueChange={(value) =>
                     editor
                       .chain()
@@ -365,19 +343,12 @@ export function TipTapEditor({
                       .run()
                   }
                 >
-                  <SelectTrigger className="h-8 w-[90px] text-sm">
+                  <SelectTrigger className="h-8 w-[120px] text-sm">
                     <SelectValue placeholder="Size..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="default" className="text-sm">
-                      Default
-                    </SelectItem>
                     {fontSizes.map((size) => (
-                      <SelectItem
-                        key={size.value}
-                        value={size.value}
-                        className="text-sm"
-                      >
+                      <SelectItem key={size.value} value={size.value} className="text-sm">
                         {size.label}
                       </SelectItem>
                     ))}
@@ -385,80 +356,8 @@ export function TipTapEditor({
                 </Select>
               </div>
 
-              <div className="flex items-center gap-1">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={cn(
-                        "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive("bold") && "bg-muted"
-                      )}
-                      onClick={() => editor.chain().focus().toggleBold().run()}
-                    >
-                      <Bold className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Bold</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={cn(
-                        "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive("italic") && "bg-muted"
-                      )}
-                      onClick={() =>
-                        editor.chain().focus().toggleItalic().run()
-                      }
-                    >
-                      <Italic className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Italic</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={cn(
-                        "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive("underline") && "bg-muted"
-                      )}
-                      onClick={() =>
-                        editor.chain().focus().toggleUnderline().run()
-                      }
-                    >
-                      <UnderlineIcon className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Underline</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={cn(
-                        "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive("strike") && "bg-muted"
-                      )}
-                      onClick={() =>
-                        editor.chain().focus().toggleStrike().run()
-                      }
-                    >
-                      <Strikethrough className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Strikethrough</TooltipContent>
-                </Tooltip>
-              </div>
-
-              <div className="flex items-center gap-1">
+              {/* Text Color Group */}
+              <div className="flex items-center gap-1 border-r pr-1">
                 <Select
                   value={editor.getAttributes("textStyle").color || "default"}
                   onValueChange={(value) =>
@@ -487,9 +386,7 @@ export function TipTapEditor({
                           size="sm"
                           className="h-6 w-6 p-0 hover:bg-muted"
                           style={{ backgroundColor: color }}
-                          onClick={() =>
-                            editor.chain().focus().setColor(color).run()
-                          }
+                          onClick={() => editor.chain().focus().setColor(color).run()}
                         />
                       ))}
                     </div>
@@ -500,13 +397,9 @@ export function TipTapEditor({
                   value={editor.getAttributes("highlight").color || "default"}
                   onValueChange={(value) => {
                     if (value === "default") {
-                      editor.chain().focus().unsetHighlight().run();
+                      editor.chain().focus().unsetHighlight().run()
                     } else {
-                      editor
-                        .chain()
-                        .focus()
-                        .toggleHighlight({ color: value })
-                        .run();
+                      editor.chain().focus().toggleHighlight({ color: value }).run()
                     }
                   }}
                 >
@@ -528,54 +421,79 @@ export function TipTapEditor({
                           size="sm"
                           className="h-6 w-6 p-0 hover:bg-muted"
                           style={{ backgroundColor: color }}
-                          onClick={() =>
-                            editor
-                              .chain()
-                              .focus()
-                              .toggleHighlight({ color })
-                              .run()
-                          }
+                          onClick={() => editor.chain().focus().toggleHighlight({ color }).run()}
                         />
                       ))}
                     </div>
                   </SelectContent>
                 </Select>
+              </div>
 
+              {/* Text Formatting Group */}
+              <div className="flex items-center gap-0.5 border-r pr-1">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-8 w-8 p-0 hover:bg-muted"
-                      onClick={() =>
-                        editor
-                          .chain()
-                          .focus()
-                          .unsetAllMarks()
-                          .clearNodes()
-                          .run()
-                      }
+                      className={cn("h-8 w-8 p-0 hover:bg-muted", editor.isActive("bold") && "bg-muted")}
+                      onClick={() => editor.chain().focus().toggleBold().run()}
                     >
-                      <X className="h-4 w-4" />
+                      <Bold className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Clear formatting</TooltipContent>
+                  <TooltipContent>Bold</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={cn("h-8 w-8 p-0 hover:bg-muted", editor.isActive("italic") && "bg-muted")}
+                      onClick={() => editor.chain().focus().toggleItalic().run()}
+                    >
+                      <Italic className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Italic</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={cn("h-8 w-8 p-0 hover:bg-muted", editor.isActive("underline") && "bg-muted")}
+                      onClick={() => editor.chain().focus().toggleUnderline().run()}
+                    >
+                      <UnderlineIcon className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Underline</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={cn("h-8 w-8 p-0 hover:bg-muted", editor.isActive("strike") && "bg-muted")}
+                      onClick={() => editor.chain().focus().toggleStrike().run()}
+                    >
+                      <Strikethrough className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Strikethrough</TooltipContent>
                 </Tooltip>
               </div>
 
-              <div className="flex items-center gap-1">
+              {/* Text Alignment Group */}
+              <div className="flex items-center gap-0.5 border-r pr-1">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(
-                        "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive({ textAlign: "left" }) && "bg-muted"
-                      )}
-                      onClick={() =>
-                        editor.chain().focus().setTextAlign("left").run()
-                      }
+                      className={cn("h-8 w-8 p-0 hover:bg-muted", editor.isActive({ textAlign: "left" }) && "bg-muted")}
+                      onClick={() => editor.chain().focus().setTextAlign("left").run()}
                     >
                       <AlignLeft className="h-4 w-4" />
                     </Button>
@@ -589,11 +507,9 @@ export function TipTapEditor({
                       size="sm"
                       className={cn(
                         "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive({ textAlign: "center" }) && "bg-muted"
+                        editor.isActive({ textAlign: "center" }) && "bg-muted",
                       )}
-                      onClick={() =>
-                        editor.chain().focus().setTextAlign("center").run()
-                      }
+                      onClick={() => editor.chain().focus().setTextAlign("center").run()}
                     >
                       <AlignCenter className="h-4 w-4" />
                     </Button>
@@ -607,11 +523,9 @@ export function TipTapEditor({
                       size="sm"
                       className={cn(
                         "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive({ textAlign: "right" }) && "bg-muted"
+                        editor.isActive({ textAlign: "right" }) && "bg-muted",
                       )}
-                      onClick={() =>
-                        editor.chain().focus().setTextAlign("right").run()
-                      }
+                      onClick={() => editor.chain().focus().setTextAlign("right").run()}
                     >
                       <AlignRight className="h-4 w-4" />
                     </Button>
@@ -625,11 +539,9 @@ export function TipTapEditor({
                       size="sm"
                       className={cn(
                         "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive({ textAlign: "justify" }) && "bg-muted"
+                        editor.isActive({ textAlign: "justify" }) && "bg-muted",
                       )}
-                      onClick={() =>
-                        editor.chain().focus().setTextAlign("justify").run()
-                      }
+                      onClick={() => editor.chain().focus().setTextAlign("justify").run()}
                     >
                       <AlignJustify className="h-4 w-4" />
                     </Button>
@@ -638,19 +550,15 @@ export function TipTapEditor({
                 </Tooltip>
               </div>
 
-              <div className="flex items-center gap-1">
+              {/* Lists and Indentation Group */}
+              <div className="flex items-center gap-0.5 border-r pr-1">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(
-                        "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive("bulletList") && "bg-muted"
-                      )}
-                      onClick={() =>
-                        editor.chain().focus().toggleBulletList().run()
-                      }
+                      className={cn("h-8 w-8 p-0 hover:bg-muted", editor.isActive("bulletList") && "bg-muted")}
+                      onClick={() => editor.chain().focus().toggleBulletList().run()}
                     >
                       <List className="h-4 w-4" />
                     </Button>
@@ -662,13 +570,8 @@ export function TipTapEditor({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(
-                        "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive("orderedList") && "bg-muted"
-                      )}
-                      onClick={() =>
-                        editor.chain().focus().toggleOrderedList().run()
-                      }
+                      className={cn("h-8 w-8 p-0 hover:bg-muted", editor.isActive("orderedList") && "bg-muted")}
+                      onClick={() => editor.chain().focus().toggleOrderedList().run()}
                     >
                       <ListOrdered className="h-4 w-4" />
                     </Button>
@@ -681,9 +584,7 @@ export function TipTapEditor({
                       variant="ghost"
                       size="sm"
                       className="h-8 w-8 p-0 hover:bg-muted"
-                      onClick={() =>
-                        editor.chain().focus().sinkListItem("listItem").run()
-                      }
+                      onClick={() => editor.chain().focus().sinkListItem("listItem").run()}
                       disabled={!editor.can().sinkListItem("listItem")}
                     >
                       <Indent className="h-4 w-4" />
@@ -697,9 +598,7 @@ export function TipTapEditor({
                       variant="ghost"
                       size="sm"
                       className="h-8 w-8 p-0 hover:bg-muted"
-                      onClick={() =>
-                        editor.chain().focus().liftListItem("listItem").run()
-                      }
+                      onClick={() => editor.chain().focus().liftListItem("listItem").run()}
                       disabled={!editor.can().liftListItem("listItem")}
                     >
                       <Outdent className="h-4 w-4" />
@@ -709,16 +608,14 @@ export function TipTapEditor({
                 </Tooltip>
               </div>
 
-              <div className="flex items-center gap-1">
+              {/* Special Elements Group */}
+              <div className="flex items-center gap-0.5 border-r pr-1">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(
-                        "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive("link") && "bg-muted"
-                      )}
+                      className={cn("h-8 w-8 p-0 hover:bg-muted", editor.isActive("link") && "bg-muted")}
                       onClick={setLink}
                     >
                       <Link2 className="h-4 w-4" />
@@ -728,12 +625,7 @@ export function TipTapEditor({
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0 hover:bg-muted"
-                      onClick={addImage}
-                    >
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-muted" onClick={addImage}>
                       <ImageIcon className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
@@ -744,13 +636,8 @@ export function TipTapEditor({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(
-                        "h-8 w-8 p-0 hover:bg-muted",
-                        editor.isActive("codeBlock") && "bg-muted"
-                      )}
-                      onClick={() =>
-                        editor.chain().focus().toggleCodeBlock().run()
-                      }
+                      className={cn("h-8 w-8 p-0 hover:bg-muted", editor.isActive("codeBlock") && "bg-muted")}
+                      onClick={() => editor.chain().focus().toggleCodeBlock().run()}
                     >
                       <Code className="h-4 w-4" />
                     </Button>
@@ -758,45 +645,48 @@ export function TipTapEditor({
                   <TooltipContent>Code block</TooltipContent>
                 </Tooltip>
               </div>
-            </div>
 
-            <div className="flex items-center gap-1 ml-auto">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 hover:bg-muted"
-                    onClick={() => setZoom(Math.max(25, zoom - 25))}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Zoom out</TooltipContent>
-              </Tooltip>
-              <div className="flex h-8 items-center gap-1 rounded-md border px-2 text-xs">
-                <Search className="h-3 w-3" />
-                <span>{zoom}%</span>
+              {/* Right aligned controls */}
+              <div className="flex items-center gap-2 ml-auto">
+                <div className="flex items-center gap-1">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 hover:bg-muted"
+                        onClick={() => setZoom(Math.max(25, zoom - 25))}
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Zoom out</TooltipContent>
+                  </Tooltip>
+                  <div className="flex h-8 items-center gap-1 rounded-md border px-2 text-xs">
+                    <Search className="h-3 w-3" />
+                    <span>{zoom}%</span>
+                  </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 hover:bg-muted"
+                        onClick={() => setZoom(Math.min(400, zoom + 25))}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Zoom in</TooltipContent>
+                  </Tooltip>
+                </div>
               </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 hover:bg-muted"
-                    onClick={() => setZoom(Math.min(400, zoom + 25))}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Zoom in</TooltipContent>
-              </Tooltip>
             </div>
           </div>
         )}
 
         <div className="flex-1">
-          {showHtml ? (
+          {viewMode === "html" ? (
             <textarea
               value={editor.getHTML()}
               onChange={(e) => editor.commands.setContent(e.target.value)}
@@ -806,7 +696,12 @@ export function TipTapEditor({
           ) : (
             <EditorContent
               editor={editor}
-              className="min-h-[300px] min-w-[-webkit-fill-available]  w-full prose dark:prose-invert prose-sm sm:prose-base [&_.ProseMirror]:min-h-[300px] [&_.ProseMirror]:px-4 [&_.ProseMirror]:py-2 [&_.ProseMirror]:focus:outline-none [&_.ProseMirror]:focus:ring-0 [&_.ProseMirror]:border-0"
+              className={cn(
+                "min-h-[300px] min-w-[-webkit-fill-available] w-full prose dark:prose-invert prose-sm sm:prose-base",
+                "[&_.ProseMirror]:min-h-[300px] [&_.ProseMirror]:px-4 [&_.ProseMirror]:py-2",
+                "[&_.ProseMirror]:focus:outline-none [&_.ProseMirror]:focus:ring-0 [&_.ProseMirror]:border-0",
+                viewMode === "preview" && "pointer-events-none",
+              )}
               style={{ zoom: `${zoom}%` }}
             />
           )}
@@ -833,14 +728,12 @@ export function TipTapEditor({
             </svg>
             <span>HTML supported</span>
           </div>
-          <Button
-            onClick={() => onUpdate?.(editor.getHTML())}
-            className="bg-black text-white hover:bg-black/90"
-          >
+          <Button onClick={() => onUpdate?.(editor.getHTML())} className="bg-black text-white hover:bg-black/90">
             Submit
           </Button>
         </div>
       </div>
     </TooltipProvider>
-  );
+  )
 }
+
