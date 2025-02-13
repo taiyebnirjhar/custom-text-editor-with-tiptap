@@ -42,7 +42,7 @@ import {
   UnderlineIcon,
   X,
 } from "lucide-react"
-import { useCallback, useState } from "react"
+import { useCallback, useState, useEffect } from "react"
 
 const fontFamilies = [
   { value: "default", label: "System Default" },
@@ -174,6 +174,48 @@ export function TipTapEditor({ onUpdate, content = "", editable = true }: TipTap
       onUpdate?.(editor.getHTML())
     },
   })
+
+  useEffect(() => {
+    if (editor) {
+      const handlePaste = (event: ClipboardEvent) => {
+        event.preventDefault()
+        const clipboardData = event.clipboardData
+        if (clipboardData) {
+          // Try to get HTML content first
+          const html = clipboardData.getData("text/html")
+          if (html) {
+            // Find the last closing HTML tag
+            const matches = html.match(/<\/[^>]*>/g)
+            if (matches) {
+              const lastClosingTag = matches[matches.length - 1]
+              const lastIndex = html.lastIndexOf(lastClosingTag) + lastClosingTag.length
+              // Get only the content after all HTML tags
+              const cleanedHtml = html.substring(lastIndex).trim()
+              // If we have cleaned content, use it, otherwise use the original HTML
+              editor.commands.insertContent(cleanedHtml || html)
+            } else {
+              // No closing tags found, insert original content
+              editor.commands.insertContent(html)
+            }
+            return
+          }
+
+          // Fallback to plain text if no HTML is available
+          const text = clipboardData.getData("text")
+          if (text) {
+            editor.commands.insertContent(text)
+          }
+        }
+      }
+
+      const editorElement = editor.view.dom
+      editorElement.addEventListener("paste", handlePaste)
+
+      return () => {
+        editorElement.removeEventListener("paste", handlePaste)
+      }
+    }
+  }, [editor])
 
   const setLink = useCallback(() => {
     const previousUrl = editor?.getAttributes("link").href
